@@ -29,11 +29,12 @@ const getFilePath = (filePath: string) => {
   return fileLocation;
 };
 
-const getPackageInfo = (packageJson: string): Package => {
+const getPackageInfo = (packageJson: string, serviceName: string): Package => {
   const packageJsonLocation = getFilePath(packageJson);
 
   const packageJsonContent = fs.readFileSync(packageJsonLocation, "utf-8");
-  const { name, version } = JSON.parse(packageJsonContent);
+  const { name: pkgName, version } = JSON.parse(packageJsonContent);
+  const name = serviceName ? serviceName : pkgName;
   return { name, version };
 };
 
@@ -110,6 +111,7 @@ try {
   const writePackageInfo = core.getBooleanInput("package-info");
   const writeActionInfo = core.getBooleanInput("action-info");
   const packageJson = core.getInput("package-json");
+  const serviceName = core.getInput("service-name");
   const dockerFile = core.getInput("dockerfile");
   const appendDockerFile = core.getBooleanInput("append-dockerfile");
   const manifestFile = core.getInput("manifest-file");
@@ -123,7 +125,7 @@ try {
   const manifest: Manifest = {
     timestamp,
     ...(writeScm && getScm()),
-    ...(writePackageInfo && getPackageInfo(packageJson)),
+    ...(writePackageInfo && getPackageInfo(packageJson, serviceName)),
     ...(writeActionInfo && getActionInfo()),
   };
 

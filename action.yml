@@ -20,6 +20,9 @@ inputs:
     description: 'package.json path (included package.json name)'
     required: false
     default: './package.json'
+  service-name:
+    description: 'the name of the service (if provided, it overrides the one on the package.json)'
+    required: false
   dockerfile:
     description: 'Dockerfile path (included dockerfile name)'
     required: false
